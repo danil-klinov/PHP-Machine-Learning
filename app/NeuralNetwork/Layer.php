@@ -1,6 +1,7 @@
 <?php
 namespace NeuralNetwork;
 use NeuralNetwork\Neuron\HiddenNeuron;
+use NeuralNetwork\Neuron\InputNeuron;
 class Layer
 {
 

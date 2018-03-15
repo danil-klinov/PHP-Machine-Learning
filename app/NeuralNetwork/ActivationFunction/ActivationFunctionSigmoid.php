@@ -8,4 +8,9 @@ class ActivationFunctionSigmoid implements ActivationFunctionInterface
     {
         return 1 / (1 + exp(-$value));
     }
+	
+	public function differentiate($value, $computedvalue): float
+    {
+        return $computedvalue * (1 - $computedvalue);
+    }
 }

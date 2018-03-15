@@ -9,7 +9,8 @@ class HiddenNeuron implements NeuronInterface
 
     protected $synapses = [];
     protected $activationFunction;
-    protected $output;
+    protected $output = 0.0;
+	protected $z = 0.0;
 	
     public function __construct(ActivationFunctionInterface $activationFunction )
     {
@@ -29,16 +30,23 @@ class HiddenNeuron implements NeuronInterface
     public function getOutput(): float
     {
         if ($this->output === 0) {
-            $sum = 0;
+            $this->$z = 0;
             foreach ($this->synapses as $synapse) {
-                $sum += $synapse->getOutput();
+                $this->$z += $synapse->getOutput();
             }
-            $this->output = $this->activationFunction->execute($sum);
+            $this->output = $this->activationFunction->execute($this->$z);
         }
         return $this->output;
     }
-    public function zeroToOutput()
+    public function reset()
     {
         $this->output = 0;
+		$this->z = 0.0;
     }
+	
+	public function getDerivative(): float
+    {
+        return $this->activationFunction->differentiate($this->z, $this->output);
+    }
+
 }
