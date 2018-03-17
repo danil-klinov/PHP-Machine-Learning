@@ -2,12 +2,13 @@
 namespace NeuralNetwork;
 use NeuralNetwork\Neuron\HiddenNeuron;
 use NeuralNetwork\Neuron\InputNeuron;
+use NeuralNetwork\ActivationFunction\ActivationFunctionInterface;
 class Layer
 {
 
     private $neurons = [];
 
-    public function __construct(int $quantity = 0, string $neuronClass, ActivationFunctionInterface $activationFunction = null )
+    public function __construct(int $quantity = 0, string $neuronClass = HiddenNeuron::class, ?ActivationFunctionInterface $activationFunction = null )
     {
 
         for ($i = 0; $i < $quantity; ++$i) {
@@ -23,7 +24,7 @@ class Layer
         return $this->neurons;
     }
 
-    private function createNeuron(string $neuronClass, ActivationFunction $activationFunction ): NeuronInterface
+    private function createNeuron(string $neuronClass, ?ActivationFunctionInterface $activationFunction )
     {
         if ($neuronClass == HiddenNeuron::class) {
             return new HiddenNeuron($activationFunction);

@@ -7,7 +7,7 @@ class Sigma
 
     private $sigma;
 	
-    public function __construct(Neuron $neuron, float $sigma)
+    public function __construct(HiddenNeuron $neuron, float $sigma)
     {
         $this->neuron = $neuron;
         $this->sigma = $sigma;
@@ -20,7 +20,7 @@ class Sigma
     {
         return $this->sigma;
     }
-    public function getSigmaForNeuron(Neuron $neuron): float
+    public function getSigmaForNeuron(HiddenNeuron $neuron): float
     {
         $sigma = 0.0;
         foreach ($this->neuron->getSynapses() as $synapse) {

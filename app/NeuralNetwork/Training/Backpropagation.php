@@ -40,7 +40,7 @@ class Backpropagation
         $this->sigmas = [];
         $this->prevSigmas = [];
     }
-    private function getSigma(Neuron $neuron, int $targetClass, int $key, bool $lastLayer): float
+    private function getSigma(HiddenNeuron $neuron, int $targetClass, int $key, bool $lastLayer): float
     {
         $neuronOutput = $neuron->getOutput();
         $sigma = $neuron->getDerivative();
@@ -56,7 +56,7 @@ class Backpropagation
         $this->sigmas[] = new Sigma($neuron, $sigma);
         return $sigma;
     }
-    private function getPrevSigma(Neuron $neuron): float
+    private function getPrevSigma(HiddenNeuron $neuron): float
     {
         $sigma = 0.0;
         foreach ($this->prevSigmas as $neuronSigma) {

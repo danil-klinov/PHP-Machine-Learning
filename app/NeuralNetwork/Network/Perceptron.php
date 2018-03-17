@@ -27,7 +27,7 @@ abstract class Perceptron extends Network
 
     private $iterations;
 
-    public function __construct(int $inputLayerFeatures, array $hiddenLayers, array $classes, int $iterations = 1000, ActivationFunction $activationFunction = null, float $learningRate = 1)
+    public function __construct(int $inputLayerFeatures, array $hiddenLayers, array $classes, int $iterations = 1000, ?ActivationFunction $activationFunction = null, float $learningRate = 1)
     {
         $this->classes = array_values($classes);
         $this->iterations = $iterations;
@@ -67,8 +67,8 @@ abstract class Perceptron extends Network
     {
         $this->addInputLayer($this->inputLayerFeatures);
         $this->addNeuronLayers($this->hiddenLayers, $this->activationFunction);
-        $sigmoid = new Sigmoid();
-        $this->addLayer(new Layer($layer, HiddenNeuron::class, $sigmoid));
+        $sigmoid = new ActivationFunctionSigmoid();
+        $this->addLayer(new Layer(count($this->classes), HiddenNeuron::class, $sigmoid));
         $this->generateSynapses();
         $this->backpropagation = new Backpropagation($this->learningRate);
     }
@@ -80,7 +80,7 @@ abstract class Perceptron extends Network
     private function addNeuronLayers(array $layers, ActivationFunction $defaultActivationFunction = null): void
     {
         foreach ($layers as $layer) {
-			$this->addLayer($layer);
+			$this->addLayer(new Layer($layer, HiddenNeuron::class, $defaultActivationFunction));
         }
     }
 	
@@ -96,13 +96,13 @@ abstract class Perceptron extends Network
 
     private function generateLayerSynapses(Layer $nextLayer, Layer $currentLayer): void
     {
-        foreach ($nextLayer->getNodes() as $nextNeuron) {
+        foreach ($nextLayer->getNeurons() as $nextNeuron) {
                 $this->generateNeuronSynapses($currentLayer, $nextNeuron);
         }
     }
-    private function generateNeuronSynapses(Layer $currentLayer, Neuron $nextNeuron): void
+    private function generateNeuronSynapses(Layer $currentLayer, HiddenNeuron $nextNeuron): void
     {
-        foreach ($currentLayer->getNodes() as $currentNeuron) {
+        foreach ($currentLayer->getNeurons() as $currentNeuron) {
             $nextNeuron->addSynapse(new Synapse($currentNeuron));
         }
     }
@@ -111,5 +111,17 @@ abstract class Perceptron extends Network
         foreach ($targets as $key => $target) {
             $this->trainSample($samples[$key], $target);
         }
+    }
+	
+	public function predict(array $samples)
+    {
+        if (!is_array($samples[0])) {
+            return $this->predictSample($samples);
+        }
+        $predicted = [];
+        foreach ($samples as $index => $sample) {
+            $predicted[$index] = $this->predictSample($sample);
+        }
+        return $predicted;
     }
 }

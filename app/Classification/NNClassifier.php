@@ -5,7 +5,7 @@ use NeuralNetwork\Network\Perceptron;
 
 class NNClassifier extends Perceptron implements Classifier
 {
-    protected function predictSample(array $sample)
+    public function predictSample(array $sample)
     {
         $output = $this->setInput($sample)->getOutput();
         $predictedClass = null;
@@ -19,7 +19,7 @@ class NNClassifier extends Perceptron implements Classifier
         return $this->classes[$predictedClass];
     }
 
-    protected function trainSample(array $sample, $target): void
+    public function trainSample(array $sample, $target): void
     {
         $this->setInput($sample)->getOutput();
         $this->backpropagation->backpropagate($this->getLayers(), $this->getTargetClass($target));

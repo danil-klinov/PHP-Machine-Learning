@@ -9,7 +9,7 @@ abstract class Network implements NetworkInterface
 {
 
     protected $layers = [];
-    public function addLayer(Layer $layer): void
+    public function addLayer(Layer $layer)
     {
         $this->layers[] = $layer;
     }
@@ -29,7 +29,7 @@ abstract class Network implements NetworkInterface
     public function getOutput(): array
     {
         $result = [];
-        foreach ($this->getOutputLayer()->getNodes() as $neuron) {
+        foreach ($this->getOutputLayer()->getNeurons() as $neuron) {
             $result[] = $neuron->getOutput();
         }
         return $result;

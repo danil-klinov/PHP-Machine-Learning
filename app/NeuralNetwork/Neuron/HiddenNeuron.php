@@ -2,7 +2,7 @@
 
 namespace NeuralNetwork\Neuron;
 use NeuralNetwork\ActivationFunction\ActivationFunctionInterface;
-use NeuralNetwork\ActivationFunction\Sigmoid;
+use NeuralNetwork\ActivationFunction\ActivationFunctionSigmoid;
 use NeuralNetwork\Synapse;
 class HiddenNeuron implements NeuronInterface
 {
@@ -12,9 +12,9 @@ class HiddenNeuron implements NeuronInterface
     protected $output = 0.0;
 	protected $z = 0.0;
 	
-    public function __construct(ActivationFunctionInterface $activationFunction )
+    public function __construct(?ActivationFunctionInterface $activationFunction )
     {
-        $this->activationFunction = $activationFunction;
+        $this->activationFunction = $activationFunction ?: new ActivationFunctionSigmoid();
         $this->synapses = [];
         $this->output = 0;
     }
