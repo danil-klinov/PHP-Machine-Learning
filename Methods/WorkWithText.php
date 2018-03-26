@@ -19,6 +19,17 @@ class WorkWithText
         $words = explode("\n", $allWords);
         return $words;
     }
+
+    public function buildTextVector($array)
+    {
+        $vector = array();
+
+        foreach (array_count_values($array) as $key => $value) {
+            $vector[$key] = $value;
+        }
+
+        return $vector;
+    }
     
 }
 
