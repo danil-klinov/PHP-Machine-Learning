@@ -19,9 +19,8 @@ use TextProcessing\ConversionToVector;
 	
 	for ($i = 0; $i < N; $i++){
 		for ($theme = 0; $theme < THEME; $theme++){
-			//do right filepath
-			$file = file_get_contents($q . ".txt");
-			
+			//filepath right?
+			$file = file_get_contents(__DIR__ . '/DataSet/' . $theme . '/' . $i . '.txt');
 			$vectors[] = $ctv->buildTextVector($file,$keyWords);
 			$result[] = $theme;
 		}

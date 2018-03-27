@@ -15,13 +15,17 @@ class ConversionToVector
 
 		$arr = prepareText($file);
 		$vector = array();
-		
-		// to do right
-		//foreach (array_count_values($arr) as $key => $value) {
-		//	$vector[$key] = $value;
-		//}
-
-		return $vector;
+		$result = array();
+		foreach (array_count_values($arr) as $key => $value) {
+				$vector[$key] = $value;
+		}
+		for ($i = 0; $i < count($keyWords); $i++){
+			$result[$i] = 0;
+			if (array_key_exists($keyWords[$i], $vector)) {
+				$result[$i] = $vector[$keyWords[$i]]
+			}
+		}
+		return $result;
 
 	}
 	
