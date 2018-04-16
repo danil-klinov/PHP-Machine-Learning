@@ -1,6 +1,6 @@
 <?php
 
-namespace Stem;
+namespace TextProcessing;
 
 class LinguaStemRu
 {

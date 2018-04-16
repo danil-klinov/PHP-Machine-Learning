@@ -3,15 +3,15 @@ spl_autoload_register(function ($class_name) {
     include $class_name . '.php';
 });
 
-define('N', 4);
+define('N', 2);
 define('THEME', 6);
 
 use Classification\NNClassifier;
 use TextProcessing\Processing;
 use TextProcessing\ConversionToVector;
 
-	$processing = new Processing();
-	$keyWords = $p.getKeyWords();
+	$p = new Processing();
+	$keyWords = $p->getKeyWords();
 	$ctv = new ConversionToVector();
 	
 	$vectors = array();
@@ -19,8 +19,8 @@ use TextProcessing\ConversionToVector;
 	
 	for ($i = 0; $i < N; $i++){
 		for ($theme = 0; $theme < THEME; $theme++){
-			//filepath right?
-			$file = file_get_contents(__DIR__ . '/DataSet/' . $theme . '/' . $i . '.txt');
+			
+			$file = file_get_contents(__DIR__ . '/DataSet/Text/' . $theme . '/' . $i . '.txt');
 			$vectors[] = $ctv->buildTextVector($file,$keyWords);
 			$result[] = $theme;
 		}

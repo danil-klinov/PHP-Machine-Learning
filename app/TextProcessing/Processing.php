@@ -2,7 +2,7 @@
 
 namespace TextProcessing;
 
-define('N', 4);
+define('N', 2);
 define('THEME', 6);
 
 use TextProcessing\LinguaStemRu;
@@ -14,8 +14,8 @@ class Processing
 	function getKeyWords(){
 		
 		
-		
-		$keyWordsFile = __DIR__ . 'keyWords.txt';
+		echo "1";
+		$keyWordsFile = __DIR__ . '/keyWords.txt';
 		$keyWords = array();
 		if (file_exists($keyWordsFile)) {
 			$file = file_get_contents($keyWordsFile);
@@ -33,33 +33,31 @@ class Processing
 				$wordsTheme[$theme] = array();
 				$textTheme[$theme] = array();
 				for ($q = 0; $q < N; $q++){
-				//filepath right?
-				$file = file_get_contents(__DIR__ . '/../DataSet/' . $theme . '/' . $q . '.txt');
-				$text = getAllWords($file);
-				$text = deleteStopWords($text);
-				$text = doStemmWithText($text);
+				
+				$file = file_get_contents(__DIR__ . '/../DataSet/Text/' . $theme . '/' . $q . '.txt');
+				$text = $this->getAllWords($file);
+				$text = $this->deleteStopWords($text);
+				$text = $this->doStemmWithText($text);
 				$textTheme[$theme][] = $text;
 				$wordsTheme[$theme] = array_merge($wordsTheme[$theme], $text);
 				}
 				$allWords = array_merge($wordsTheme[$theme], $text);
 			}
-			
+			echo "2";
+			$x = count($allWords);
 			$new_grand_array= array_unique($allWords);
-			$x = count($new_grand_array);
+			
 			
 			$allUniqueWords  = array();
 
-			for ($i = 0; $i < $x; $i++){
-				if($new_grand_array[$i] != '' || $new_grand_array[$i] != '	' || 			$new_grand_array[$i] != ' '  || $new_grand_array[$i] != '\r' || $new_grand_array[$i] != "\n" || $new_grand_array[$i] != null || $new_grand_array[$i] != false){
-					if (array_key_exists($i, $new_grand_array))
-						array_push($allUniqueWords, $new_grand_array[$i]);
-					else 
-						$x++;
+			foreach ($new_grand_array as $key => $value){
+				if( $value != '' && $value != '	' && $value != ' '  && $value != '\r' && $value != "\n" && $value != null && $value != false){
+						array_push($allUniqueWords, $value);
 				}
 			}
 			
 			
-
+			echo "3";
 			$tfIdf = array();
 			for ($i = 0; $i < count($allUniqueWords); $i++){
 				$documentsHaveWord = array();
@@ -81,7 +79,7 @@ class Processing
 				for ($theme = 0; $theme < THEME; $theme++){
 					$tf = $countWord[$theme]/(float)$wordsTheme[$theme];
 					
-					$sum = 0
+					$sum = 0;
 					for ($theme2 = 0; $theme2 < THEME; $theme++){
 						if ($theme != $theme2)
 							$sum += $documentsHaveWord[$theme2];
@@ -100,7 +98,7 @@ class Processing
 				
 			}
 			
-			
+			echo "4";
 			$fp = fopen($keyWordsFile, 'a');
 			for ($i = 0; $i < count($keyWords); $i++){
 				fwrite($fp, mb_strtolower($keyWords[$i]) . PHP_EOL);	
@@ -172,8 +170,8 @@ class Processing
 	}
 	
 	function deleteStopWords($text){
-		//filepath right?
-		$stop_words = file_get_contents(__DIR__ . 'stop_words.txt');
+		
+		$stop_words = file_get_contents(__DIR__ . '/stop_words.txt');
 		$stop_words = str_replace("\n", " ", $stop_words);
 		$array_stop_words = explode(" ", $stop_words);
 		for ($i = 0; $i < count($text); $i++){
