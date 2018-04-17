@@ -30,11 +30,11 @@ class HiddenNeuron implements NeuronInterface
     public function getOutput(): float
     {
         if ($this->output === 0) {
-            $this->$z = 0;
+            $this->z = 0;
             foreach ($this->synapses as $synapse) {
-                $this->$z += $synapse->getOutput();
+                $this->z += $synapse->getOutput();
             }
-            $this->output = $this->activationFunction->execute($this->$z);
+            $this->output = $this->activationFunction->execute($this->z);
         }
         return $this->output;
     }

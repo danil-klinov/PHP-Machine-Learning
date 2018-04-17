@@ -2,19 +2,16 @@
 
 namespace TextProcessing;
 
-define('N', 2);
-define('THEME', 6);
+//define('N', 2);
+//define('THEME', 2);
+define('TOP', 10);
 
 use TextProcessing\LinguaStemRu;
 
 class Processing 
 {
 	
-	
 	function getKeyWords(){
-		
-		
-		echo "1";
 		$keyWordsFile = __DIR__ . '/keyWords.txt';
 		$keyWords = array();
 		if (file_exists($keyWordsFile)) {
@@ -22,8 +19,7 @@ class Processing
 			$textik  = mb_detect_encoding($file, array('utf-8', 'cp1251'));
 			$file = iconv($textik, 'UTF-8', $file);
 			$file = str_replace("\n", " ", $file);
-			$text = explode(" ", $file);
-			$keyWords = explode(" ", $text);
+			$keyWords = explode(" ", $file);
 		} 
 		else{
 			$textTheme = array();
@@ -33,77 +29,76 @@ class Processing
 				$wordsTheme[$theme] = array();
 				$textTheme[$theme] = array();
 				for ($q = 0; $q < N; $q++){
-				
-				$file = file_get_contents(__DIR__ . '/../DataSet/Text/' . $theme . '/' . $q . '.txt');
-				$text = $this->getAllWords($file);
-				$text = $this->deleteStopWords($text);
-				$text = $this->doStemmWithText($text);
-				$textTheme[$theme][] = $text;
-				$wordsTheme[$theme] = array_merge($wordsTheme[$theme], $text);
+					$file = file_get_contents(__DIR__ . '/../DataSet/Text/' . $theme . '/' . $q . '.txt');
+					$text = $this->getAllWords($file);
+					$text = $this->deleteStopWords($text);
+					$text = $this->doStemmWithText($text);
+					$textTheme[$theme][] = $text;
+					foreach($text as $key => $value){
+						$wordsTheme[$theme][] = $value;
+						$allWords[] = $value;
+					}
 				}
-				$allWords = array_merge($wordsTheme[$theme], $text);
 			}
-			echo "2";
+			
 			$x = count($allWords);
 			$new_grand_array= array_unique($allWords);
-			
-			
 			$allUniqueWords  = array();
-
 			foreach ($new_grand_array as $key => $value){
 				if( $value != '' && $value != '	' && $value != ' '  && $value != '\r' && $value != "\n" && $value != null && $value != false){
-						array_push($allUniqueWords, $value);
+					array_push($allUniqueWords, $value);
 				}
 			}
 			
 			
-			echo "3";
+			
 			$tfIdf = array();
-			for ($i = 0; $i < count($allUniqueWords); $i++){
+			foreach ($allUniqueWords as $key => $value){
 				$documentsHaveWord = array();
 				$countWord = array();
-				
+
 				for ($theme = 0; $theme < THEME; $theme++){
 					$documentsHaveWord[$theme] = 0;
 					$countWord[$theme] = 0;
 					for ($q = 0; $q < N; $q++){
-						if (in_array($allUniqueWords[$i], $textTheme[$theme][$q]))
+						if (in_array($value, $textTheme[$theme][$q]))
 							$documentsHaveWord[$theme]++;
 						for ($k = 0; $k < count($textTheme[$theme][$q]); $k++){
-							if ($allUniqueWords[$i] == $textTheme[$theme][$q][$k])
+							if ($value == $textTheme[$theme][$q][$k])
 								$countWord[$theme]++;
 						}
 					}
 				}
 				
 				for ($theme = 0; $theme < THEME; $theme++){
-					$tf = $countWord[$theme]/(float)$wordsTheme[$theme];
-					
+					$tf = $countWord[$theme]/(float)count($wordsTheme[$theme]);					
 					$sum = 0;
-					for ($theme2 = 0; $theme2 < THEME; $theme++){
+					for ($theme2 = 0; $theme2 < THEME; $theme2++){
 						if ($theme != $theme2)
 							$sum += $documentsHaveWord[$theme2];
 					}
-					$idf = log(THEME*N/(float)$sum);
-					$tfIdf[$theme][$i]= $tf*$idf;
+					if ($sum != 0) $idf = log(THEME*N/(float)$sum);
+					else $idf = 0;
+					
+					$tfIdf[$theme][$value]= $tf*$idf;
 				}
 				
 			}
 			
 			for ($theme = 0; $theme < THEME; $theme++){
-				sort($tfIdf[$theme]);
-				for ($i = 0; $i < 100; $i++){
-					$keyWords[] = $tfIdf[$theme][$i];
-				}
-				
+				arsort($tfIdf[$theme]);
+				$top = array_slice($tfIdf[$theme],0,TOP);
+				foreach ($top as $key => $value){
+					echo $key . " " . $value . " \n";
+					if(!in_array($key,$keyWords))$keyWords[] = $key;
+				} 				
 			}
 			
-			echo "4";
 			$fp = fopen($keyWordsFile, 'a');
-			for ($i = 0; $i < count($keyWords); $i++){
-				fwrite($fp, mb_strtolower($keyWords[$i]) . PHP_EOL);	
+			foreach ($keyWords as $key => $value){
+				fwrite($fp, mb_strtolower($value) . PHP_EOL);	
 			}
-			fclose($keyWordsFile);
+			fclose($fp);
 		}
 		
 		return $keyWords;
@@ -186,7 +181,7 @@ class Processing
 	function doStemmWithText($text){
 		$stemmer = new LinguaStemRu();
 		for ($i = 0; $i < count($text); $i++){
-		$text[$i] = $stemmer->stem_word($text[$i]);
+		//$text[$i] = $stemmer->stem_word($text[$i]);
 		}
 		return $text;
 	}

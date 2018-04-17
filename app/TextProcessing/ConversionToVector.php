@@ -13,16 +13,16 @@ class ConversionToVector
 {
 	function buildTextVector($file,$keyWords) {
 
-		$arr = prepareText($file);
+		$arr = $this->prepareText($file);
 		$vector = array();
 		$result = array();
 		foreach (array_count_values($arr) as $key => $value) {
 				$vector[$key] = $value;
 		}
-		for ($i = 0; $i < count($keyWords); $i++){
-			$result[$i] = 0;
-			if (array_key_exists($keyWords[$i], $vector)) {
-				$result[$i] = $vector[$keyWords[$i]]
+		foreach ($keyWords as $key => $value){
+			$result[$key] = 0;
+			if (array_key_exists($value, $vector)) {
+				$result[$key] = $vector[$value];
 			}
 		}
 		return $result;
