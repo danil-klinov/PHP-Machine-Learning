@@ -89,7 +89,7 @@ class Processing
 				arsort($tfIdf[$theme]);
 				$top = array_slice($tfIdf[$theme],0,TOP);
 				foreach ($top as $key => $value){
-					echo $key . " " . $value . " \n";
+					//echo $key . " " . $value . " \n";
 					if(!in_array($key,$keyWords))$keyWords[] = $key;
 				} 				
 			}
@@ -181,7 +181,7 @@ class Processing
 	function doStemmWithText($text){
 		$stemmer = new LinguaStemRu();
 		for ($i = 0; $i < count($text); $i++){
-		//$text[$i] = $stemmer->stem_word($text[$i]);
+		$text[$i] = $stemmer->stem_word($text[$i]);
 		}
 		return $text;
 	}

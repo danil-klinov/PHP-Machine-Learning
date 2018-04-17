@@ -3,9 +3,9 @@ spl_autoload_register(function ($class_name) {
     include $class_name . '.php';
 });
 
-define('N', 1);
+define('N', 5);
 define('THEME', 6);
-define('NTEST', 2);
+define('NTEST', 5);
 
 use Classification\NNClassifier;
 use TextProcessing\Processing;
