@@ -4,7 +4,7 @@ namespace TextProcessing;
 
 //define('N', 2);
 //define('THEME', 2);
-define('TOP', 20);
+define('TOP', 100);
 
 use TextProcessing\LinguaStemRu;
 
