@@ -4,7 +4,7 @@ namespace TextProcessing;
 
 //define('N', 2);
 //define('THEME', 2);
-define('TOP', 10);
+define('TOP', 20);
 
 use TextProcessing\LinguaStemRu;
 
@@ -16,7 +16,7 @@ class Processing
 		$keyWords = array();
 		if (file_exists($keyWordsFile)) {
 			$file = file_get_contents($keyWordsFile);
-			$textik  = mb_detect_encoding($file, array('utf-8', 'cp1251'));
+			$textik  = mb_detect_encoding($file);
 			$file = iconv($textik, 'UTF-8', $file);
 			$file = str_replace("\n", " ", $file);
 			$keyWords = explode(" ", $file);
@@ -49,7 +49,7 @@ class Processing
 					array_push($allUniqueWords, $value);
 				}
 			}
-			
+
 			
 			
 			$tfIdf = array();
@@ -115,7 +115,7 @@ class Processing
 	}
 	
 	function getAllWords($file){
-		$textik  = mb_detect_encoding($file, array('utf-8', 'cp1251'));
+		$textik  = mb_detect_encoding($file, array('utf-8', 'cp1251','JIS', 'eucjp-win', 'ASCII', 'EUC-JP'));
 		$file = iconv($textik, 'UTF-8', $file);
 		$file = str_replace("\n", " ", $file);
 		$text = explode(" ", $file);
@@ -128,7 +128,7 @@ class Processing
 		$text[$i] = str_replace("!", "", $text[$i]);
 		$text[$i] = str_replace("@", "", $text[$i]);
 		$text[$i] = str_replace("#", "", $text[$i]);
-		$text[$i] = str_replace("π", "", $text[$i]);
+		$text[$i] = str_replace("‚Ññ", "", $text[$i]);
 		$text[$i] = str_replace("$", "", $text[$i]);
 		$text[$i] = str_replace("%", "", $text[$i]);
 		$text[$i] = str_replace("^", "", $text[$i]);
@@ -154,12 +154,13 @@ class Processing
 		$text[$i] = str_replace("\r", "", $text[$i]);
 		$text[$i] = str_replace(" ", "", $text[$i]);
 		$text[$i] = str_replace("\"", "", $text[$i]);
-		$text[$i] = str_replace("ó", "", $text[$i]);
-		$text[$i] = str_replace("ª", "", $text[$i]);
-		$text[$i] = str_replace("´", "", $text[$i]);
+		$text[$i] = str_replace("‚Äî", "", $text[$i]);
+		$text[$i] = str_replace("¬ª", "", $text[$i]);
+		$text[$i] = str_replace("¬´", "", $text[$i]);
 		$text[$i] = str_replace("	", "", $text[$i]);
-		$text[$i] = str_replace("ì", "", $text[$i]);
-		$text[$i] = str_replace("î", "", $text[$i]);
+		$text[$i] = str_replace("‚Äú", "", $text[$i]);
+		$text[$i] = str_replace("‚Äù", "", $text[$i]);
+		$text[$i] = str_replace("‚Äì", "", $text[$i]);
 		}
 		return $text;
 	}
@@ -185,12 +186,5 @@ class Processing
 		}
 		return $text;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+		
 }

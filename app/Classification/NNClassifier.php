@@ -29,4 +29,28 @@ class NNClassifier extends Perceptron implements Classifier
     {
         return array_search($target, $this->classes, true);
     }
+	
+	public static function saveToFile(NNClassifier $nnclassifier, string $file)
+    {
+        $serialized = serialize($nnclassifier);
+        if (empty($serialized)) {
+            throw new SerializeException('Class can not be serialized');
+        }
+        $result = file_put_contents($file, $serialized, LOCK_EX);
+        if ($result === false) {
+            throw new FileException('File cant be saved.');
+        }
+    }
+	
+	public static function restoreFromFile(string $file)
+    {
+        if (!file_exists($file) || !is_readable($file)) {
+            throw new FileException('File cant be open.');
+        }
+        $object = unserialize(file_get_contents($file));
+        if ($object === false) {
+            throw new SerializeException('File cant be unserialized.');
+        }
+        return $object;
+    }
 }
