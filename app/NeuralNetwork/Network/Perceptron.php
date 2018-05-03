@@ -124,4 +124,10 @@ abstract class Perceptron extends Network
         }
         return $predicted;
     }
+	
+	public function predictWithPercent(array $samples)
+    {
+        return $this->predictSampleWithPercent($samples);
+
+    }
 }

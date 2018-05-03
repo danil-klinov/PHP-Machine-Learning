@@ -4,7 +4,7 @@ namespace TextProcessing;
 
 //define('N', 2);
 //define('THEME', 2);
-define('TOP', 100);
+define('TOP', 20);
 
 use TextProcessing\LinguaStemRu;
 
@@ -16,10 +16,12 @@ class Processing
 		$keyWords = array();
 		if (file_exists($keyWordsFile)) {
 			$file = file_get_contents($keyWordsFile);
-			$textik  = mb_detect_encoding($file);
+			$textik  = mb_detect_encoding($file, array('utf-8', 'cp1251','JIS', 'eucjp-win', 'ASCII', 'EUC-JP'));
 			$file = iconv($textik, 'UTF-8', $file);
-			$file = str_replace("\n", " ", $file);
-			$keyWords = explode(" ", $file);
+			$keyWords = explode(PHP_EOL, $file);
+			$lastindex = count($keyWords)-1;
+			if ($keyWords[$lastindex] == "") unset($keyWords[$lastindex]);
+			
 		} 
 		else{
 			$textTheme = array();
@@ -45,9 +47,7 @@ class Processing
 			$new_grand_array= array_unique($allWords);
 			$allUniqueWords  = array();
 			foreach ($new_grand_array as $key => $value){
-				if( $value != '' && $value != '	' && $value != ' '  && $value != '\r' && $value != "\n" && $value != null && $value != false){
 					array_push($allUniqueWords, $value);
-				}
 			}
 
 			
@@ -162,7 +162,13 @@ class Processing
 		$text[$i] = str_replace("”", "", $text[$i]);
 		$text[$i] = str_replace("–", "", $text[$i]);
 		}
-		return $text;
+		$result = array();
+		foreach ($text as $key => $value){
+			if( $value != '' && $value != '	' && $value != ' '  && $value != '\r' && $value != "\n" && $value != null && $value != false){
+				$result[] = $value;
+			}
+		}
+		return $result;
 	}
 	
 	function deleteStopWords($text){
@@ -185,6 +191,17 @@ class Processing
 		$text[$i] = $stemmer->stem_word($text[$i]);
 		}
 		return $text;
+	}
+	
+	function getNameGenre($class){
+		switch ($class){
+			case 0: return "Спорт";
+			case 1: return "Политика";
+			case 2: return "Религия";
+			case 3: return "Искусство";
+			case 4: return "Наука";
+			case 5: return "Развлечения";
+		}
 	}
 		
 }

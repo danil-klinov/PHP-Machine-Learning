@@ -23,6 +23,7 @@ class ConversionToVector
 			$result[$key] = 0;
 			if (array_key_exists($value, $vector)) {
 				$result[$key] = $vector[$value];
+				//echo $vector[$value] . "<br>";
 			}
 		}
 		return $result;

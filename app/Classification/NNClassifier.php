@@ -19,6 +19,16 @@ class NNClassifier extends Perceptron implements Classifier
         return $this->classes[$predictedClass];
     }
 
+	public function predictSampleWithPercent(array $sample)
+    {
+        $output = $this->setInput($sample)->getOutput();
+        $predicted = array();
+        foreach ($output as $class => $value) {
+            $predicted[$this->classes[$class]] = $value;
+        }
+        return $predicted;
+    }
+	
     public function trainSample(array $sample, $target): void
     {
         $this->setInput($sample)->getOutput();
