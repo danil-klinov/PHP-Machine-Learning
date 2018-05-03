@@ -47,7 +47,10 @@ class Processing
 			$new_grand_array= array_unique($allWords);
 			$allUniqueWords  = array();
 			foreach ($new_grand_array as $key => $value){
+				if( $value != '' && $value != '	' && $value != ' '  && $value != '\r' && $value != "\n" && $value != null && $value != false){
 					array_push($allUniqueWords, $value);
+				}
+
 			}
 
 			

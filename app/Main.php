@@ -37,7 +37,7 @@ $text=@$_GET["Text"];
 		
 		}
 	
-		$nn = new NNClassifier(count($keyWords), [128], [0,1,2,3,4,5]);
+		$nn = new NNClassifier(count($keyWords), [32], [0,1,2,3,4,5]);
 		$nn->train($vectors,$result);
 		NNClassifier::saveToFile($nn,$nnFile);
 	}
